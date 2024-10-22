@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talk to me</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+    <section class="pag1">
+        <div class="box-imglogo">
+            <img src="{{ url_for('static', filename='images/img5.png') }}" alt="Logo">
+        </div>
+    </section>
+
+    <section class="hero">
+        <div class="box-img">
+            <img src="{{ url_for('static', filename='images/img.png') }}" alt="Hero Image">
+        </div>
+    </section>
+
+    <section class="pag2">
+        <div class="box-text">
+            <header>
+                <h2>O surdo e a sociedade</h2>
+            </header>
+        </div>
+    </section>
+
+    <section class="video-feed">
+        <h3>Feed de Vídeo ao Vivo</h3>
+        <div class="video-container">
+            <img src="{{ url_for('video_feed') }}" width="640" height="480">
+        </div>
+    </section>
+</body>
+</html>

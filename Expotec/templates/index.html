@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talk to me</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+    
+        <section class="pag1">
+            <div class="box-imglogo">
+                <img src="{{ url_for('static', filename='images/img5.png') }}" alt="Logo">
+            </div>     
+    </section>
+    
+    <section class="hero">
+<div class="box-img">
+    <img src="{{ url_for('static', filename='images/img.png') }}" alt="Hero Image">
+</div>
+    </section>
+
+    <section class="pag2">
+    <div class="box-text">
+        <header>
+     <h2>O surdo e a sociedade</h2>
+        </header>
+</div>
+    </section>
+
+    <section class="pag21">
+        <div class="box-img2">
+            <img src="{{ url_for('static', filename='images/img2.png') }}" alt="Image2">
+        </div>
+    </section>
+
+    <section class="pag3">
+        <div class="box-text2">
+<header>
+    <h3>Libras como língua</h3>
+</header>
+        </div>
+    </section>
+
+    <section class="pag31">
+       <div class="box-img3">
+        <img src="{{ url_for('static', filename='images/img3.png') }}" alt="Image3">
+       </div>
+    </section>
+
+    <section class="pag4">
+        <div class="box-text3">
+<header>
+    <h3>Estrutura</h3>
+</header>
+        </div>
+    </section>
+
+    <section class="pag41">
+       <div class="box-img4">
+        <img src="{{ url_for('static', filename='images/img4.png') }}" alt="Image4">
+       </div>
+    </section>
+
+    <section class="pag5">    
+        <section class="leitor_infos"></section>
+        
+        <!-- Formulário para salvar o gesto -->
+        <form id="saveGestureForm">
+            <img src="{{ url_for('video_feed') }}" alt="Video feed" class="video">
+            <p>Frase reconhecida: <span id="recognized-phrase"></span></p>
+            <label for="gestureName">Nome do Gesto:</label>
+            <input type="text" id="gestureName" name="gestureName" required>
+            <button type="submit">Salvar Gesto</button>
+        </form>
+    </section>
+
+    <script>
+        // Função para buscar o gesto reconhecido a cada 1 segundo
+        function fetchRecognizedGesture() {
+            fetch('/gesto_reconhecido')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('recognized-phrase').textContent = data.frase_atual;
+                })
+                .catch(error => console.error('Erro ao buscar gesto reconhecido:', error));
+        }
+
+        // Atualiza a frase reconhecida a cada segundo
+        setInterval(fetchRecognizedGesture, 1000);
+
+        // Função para salvar o gesto via formulário
+        document.getElementById('saveGestureForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Evitar recarregamento da página
+            const gestureName = document.getElementById('gestureName').value;
+
+            // Enviar o nome do gesto ao servidor
+            fetch('/salvar_gesto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gestureName: gestureName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);  // Mostrar uma mensagem de sucesso
+            })
+            .catch(error => console.error('Erro ao salvar gesto:', error));
+        });
+    </script>
+        </section>   
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesture Recognition</title>
+</head>
+<body>
+    <h1>Gesture Recognition</h1>
+    
+    <!-- Exibe a frase/gesto reconhecido -->
+    <p>Frase reconhecida: <span id="recognized-phrase"></span></p>
+    
+    <!-- Formulário para salvar o gesto -->
+    <form id="saveGestureForm">
+        <label for="gestureName">Nome do Gesto:</label>
+        <input type="text" id="gestureName" name="gestureName" required>
+        <button type="submit">Salvar Gesto</button>
+    </form>
+    
+    <!-- Exibe o feed de vídeo -->
+    <img src="{{ url_for('video_feed') }}" alt="Video feed">
+
+    <script>
+        // Função para buscar o gesto reconhecido a cada 1 segundo
+        function fetchRecognizedGesture() {
+            fetch('/gesto_reconhecido')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('recognized-phrase').textContent = data.frase_atual;
+                })
+                .catch(error => console.error('Erro ao buscar gesto reconhecido:', error));
+        }
+
+        // Atualiza a frase reconhecida a cada segundo
+        setInterval(fetchRecognizedGesture, 1000);
+
+        // Função para salvar o gesto via formulário
+        document.getElementById('saveGestureForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Evitar recarregamento da página
+            const gestureName = document.getElementById('gestureName').value;
+
+            // Enviar o nome do gesto ao servidor
+            fetch('/salvar_gesto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gestureName: gestureName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);  // Mostrar uma mensagem de sucesso
+            })
+            .catch(error => console.error('Erro ao salvar gesto:', error));
+        });
+    </script>
+</body>
+</html>
